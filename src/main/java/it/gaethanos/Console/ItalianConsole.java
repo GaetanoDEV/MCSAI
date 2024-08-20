@@ -33,6 +33,10 @@ public class ItalianConsole {
         String port = "";
         String onlinemode = "";
         String render = "";
+        String simDistance = "";
+        String maxPlayers = "";
+        String spawnProtection = "";
+        String difficulty = "";
 
         System.out.println(" ");
         System.out.println("Quale dei seguenti Software prefirisci usare? (default Vanilla)");
@@ -58,6 +62,18 @@ public class ItalianConsole {
 
         System.out.println("Definisci in numeri la Distanza di resa:");
         render = scanner.nextLine();
+
+        System.out.println("Definisci in numeri la Distanza di Simulazione:");
+        simDistance = scanner.nextLine();
+
+        System.out.println("Limite massimo di giocatori:");
+        maxPlayers = scanner.nextLine();
+
+        System.out.println("Definisci in numeri la distanza dello spawn protection:");
+        spawnProtection = scanner.nextLine();
+
+        System.out.println("Definisci la difficoltà di gioco (peaceful/easy/normal/hard):");
+        difficulty = scanner.nextLine();
 
         // SETUP
         // Aggiorna il file di configurazione
@@ -87,18 +103,28 @@ public class ItalianConsole {
         // CONFIG
         try {
             System.out.println("Configurazione del server in corso...");
+
             String configOnlineMode = "online-mode=" + onlinemode + "\n";
             String configPort = "server-port=" + port + "\n";
             String configDistance = "view-distance=" + render + "\n";
+            String configSimDistance = "simulation-distance=" + simDistance + "\n";
+            String configMaxPlayers = "max-players=" + maxPlayers + "\n";
+            String configSpawnProtection = "spawn-protection=" + spawnProtection + "\n";
+            String configDifficulty = "difficulty=" + difficulty + "\n";
+
             FileWriter serverConfig = new FileWriter("server.properties");
             serverConfig.write(configDistance);
             serverConfig.write(configPort);
             serverConfig.write(configOnlineMode);
+            serverConfig.write(configSimDistance);
+            serverConfig.write(configMaxPlayers);
+            serverConfig.write(configSpawnProtection);
+            serverConfig.write(configDifficulty);
             serverConfig.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Thread.sleep(3000);
+        Thread.sleep(5000);
     }
 
 
