@@ -49,7 +49,7 @@ public class Main {
         // CONTROLLI
         if (Objects.equals(lingua, "1")) {
             Object InterruptedException = null;
-            it.startItalian(InterruptedException);
+            it.startItalian(null);
         }
         if (Objects.equals(lingua, "2")) {
             en.startEnglish();

@@ -3,6 +3,7 @@ package it.gaethanos.Console;
 import it.gaethanos.Console.Utils.ConfigManager;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class ItalianConsole {
         System.out.println("l'installazione semplificata e la configurazione in GUI");
         System.out.println("per il proprio Server di Minecraft!");
         System.out.println(" ");
-        System.out.println("Utilizza i numeri indicati in console per selezionare");
+        System.out.println("Utilizza le risposte indicate in console per selezionare");
         System.out.println("una risposta, in caso il processo verrà terminato.");
         System.out.println("---------------------------------------------------");
         System.out.println(" ");
@@ -37,6 +38,10 @@ public class ItalianConsole {
         String maxPlayers = "";
         String spawnProtection = "";
         String difficulty = "";
+        String netherEnabled = "";
+        String endEnabled = "";
+        String worldType = "";
+
 
         System.out.println(" ");
         System.out.println("Quale dei seguenti Software prefirisci usare? (default Vanilla)");
@@ -75,6 +80,15 @@ public class ItalianConsole {
         System.out.println("Definisci la difficoltà di gioco (peaceful/easy/normal/hard):");
         difficulty = scanner.nextLine();
 
+        System.out.println("Il nether è abilitato? (true/false):");
+        netherEnabled = scanner.nextLine();
+
+        System.out.println("L'end è abilitato? (true/false):");
+        endEnabled = scanner.nextLine();
+
+        System.out.println("Seleziona il tipo di mondo (flat/normal):");
+        worldType = scanner.nextLine();
+
         // SETUP
         // Aggiorna il file di configurazione
         config.setConfig("software", software);
@@ -111,6 +125,8 @@ public class ItalianConsole {
             String configMaxPlayers = "max-players=" + maxPlayers + "\n";
             String configSpawnProtection = "spawn-protection=" + spawnProtection + "\n";
             String configDifficulty = "difficulty=" + difficulty + "\n";
+            String configNetherEnabled = "allow-nether=" + netherEnabled + "\n";
+            String configWorldType = "level-type=minecraft\\:" + worldType;
 
             FileWriter serverConfig = new FileWriter("server.properties");
             serverConfig.write(configDistance);
@@ -120,7 +136,19 @@ public class ItalianConsole {
             serverConfig.write(configMaxPlayers);
             serverConfig.write(configSpawnProtection);
             serverConfig.write(configDifficulty);
+            serverConfig.write(configNetherEnabled);
+            serverConfig.write(configWorldType);
             serverConfig.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String bukkitEndEnabled = "allow-end: " + endEnabled;
+
+            FileWriter bukkitConfig = new FileWriter("bukkit.yml");
+            bukkitConfig.write(bukkitEndEnabled);
+            bukkitConfig.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,7 +159,7 @@ public class ItalianConsole {
     private void downloadSoftware(ConfigManager config, String software, double version) {
         System.out.println("Download della versione: " + version + ".x " + "in corso...");
         // Costruisce la chiave per ottenere l'URL dal file di configurazione
-        String versionKey = software.toLowerCase() + "-" + "spigot" + "-" + version;
+        String versionKey = software.toLowerCase() + "-" + version;
         String downloadUrl = config.getConfig(versionKey);
 
         if (downloadUrl == null || downloadUrl.isEmpty()) {
@@ -143,14 +171,20 @@ public class ItalianConsole {
         String fileName = software + "-" + version + ".jar";
 
         // Download del file
-        try (BufferedInputStream in = new BufferedInputStream(new URL(downloadUrl).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
-            byte dataBuffer[] = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
+        try {
+            URL url = new URL(downloadUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+                 FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
+                byte dataBuffer[] = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+                System.out.println("Download completato!");
             }
-            System.out.println("Download completato!");
         } catch (IOException e) {
             System.out.println("Errore durante il download del software.");
             e.printStackTrace();
