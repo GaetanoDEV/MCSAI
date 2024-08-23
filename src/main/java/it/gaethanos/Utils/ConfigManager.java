@@ -1,4 +1,4 @@
-package it.gaethanos.Console.Utils;
+package it.gaethanos.Utils;
 
 import java.io.*;
 import java.nio.file.Files;

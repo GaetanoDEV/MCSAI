@@ -16,6 +16,7 @@
 
     </properties>
 
+
     <build>
         <plugins>
             <plugin>
@@ -35,10 +36,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
-
     </build>
-
-
-
 </project>

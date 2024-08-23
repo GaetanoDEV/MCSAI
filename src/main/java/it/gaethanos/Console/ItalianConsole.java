@@ -1,6 +1,7 @@
 package it.gaethanos.Console;
 
-import it.gaethanos.Console.Utils.ConfigManager;
+import it.gaethanos.Utils.ConfigManager;
+import it.gaethanos.ProcessLauncher;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -11,7 +12,7 @@ public class ItalianConsole {
     public ItalianConsole() throws IOException {
     }
 
-    public void startItalian(Object interruptedException) throws InterruptedException {
+    public void startItalian(Object interruptedException) throws InterruptedException, IOException {
         ConfigManager config = new ConfigManager();
         Scanner scanner = new Scanner(System.in);
 
@@ -94,6 +95,7 @@ public class ItalianConsole {
         config.setConfig("software", software);
         config.setConfig("version", String.valueOf(version));
         config.setConfig("ram", ram);
+        config.setConfig("java", java);
 
         // SLEEP
         System.out.println("Inizializzazione in corso della configurazione...");
@@ -126,7 +128,8 @@ public class ItalianConsole {
             String configSpawnProtection = "spawn-protection=" + spawnProtection + "\n";
             String configDifficulty = "difficulty=" + difficulty + "\n";
             String configNetherEnabled = "allow-nether=" + netherEnabled + "\n";
-            String configWorldType = "level-type=minecraft\\:" + worldType;
+            String configWorldType = "level-type=minecraft\\:" + worldType + "\n";
+            String disableSecureProfile = "enforce-secure-profile=false";
 
             FileWriter serverConfig = new FileWriter("server.properties");
             serverConfig.write(configDistance);
@@ -138,13 +141,17 @@ public class ItalianConsole {
             serverConfig.write(configDifficulty);
             serverConfig.write(configNetherEnabled);
             serverConfig.write(configWorldType);
+            System.out.println("---CHAT REPORT SYSTEM---");
+            System.out.println("Disabilitando il profilo sicuro...");
+            serverConfig.write(disableSecureProfile);
             serverConfig.close();
+            config.setConfig("configured", "1");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            String bukkitEndEnabled = "allow-end: " + endEnabled;
+            String bukkitEndEnabled = "allow-end:" + " " + endEnabled;
 
             FileWriter bukkitConfig = new FileWriter("bukkit.yml");
             bukkitConfig.write(bukkitEndEnabled);
@@ -153,6 +160,8 @@ public class ItalianConsole {
             e.printStackTrace();
         }
         Thread.sleep(5000);
+        ProcessLauncher launcher = new ProcessLauncher();
+        launcher.run();
     }
 
 
