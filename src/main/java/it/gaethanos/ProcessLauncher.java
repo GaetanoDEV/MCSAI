@@ -87,17 +87,16 @@ public class ProcessLauncher {
                 }
 
                 try (RconClient rconClient = RconClient.open(rconHost, rconPort, rconPassword);
+
                      Scanner scanner = new Scanner(System.in)) {
 
                     while (true) {
+                        System.out.print("> ");
                         String commandmc = scanner.nextLine();
                         String response = rconClient.sendCommand(commandmc);
 
                         System.out.println(response);
-
-
                     }
-
                 }
             }).start();
 
