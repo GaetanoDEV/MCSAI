@@ -2,6 +2,7 @@ package it.gaethanos;
 
 import it.gaethanos.Utils.ConfigManager;
 import it.gaethanos.Rcon.RconClient;
+import it.gaethanos.Utils.SPManager;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,11 +11,12 @@ import java.util.Scanner;
 
 public class ProcessLauncher {
     ConfigManager config = new ConfigManager();
+    SPManager sp = new SPManager();
 
     // Configurazione RCON
-    String rconHost = "localhost";
-    int rconPort = 25575;
-    String rconPassword = "";
+    String rconHost = "0.0.0.0";
+    int rconPort = Integer.parseInt(sp.getConfig("rcon.port"));
+    String rconPassword = sp.getConfig("rcon.password");
 
     public void run() {
         List<String> command = new ArrayList<>();

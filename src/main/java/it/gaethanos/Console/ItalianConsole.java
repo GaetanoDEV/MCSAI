@@ -42,6 +42,8 @@ public class ItalianConsole {
         String netherEnabled = "";
         String endEnabled = "";
         String worldType = "";
+        String rconPort = "";
+        String rconPassword = "";
 
 
         System.out.println(" ");
@@ -90,6 +92,18 @@ public class ItalianConsole {
         System.out.println("Seleziona il tipo di mondo (flat/normal):");
         worldType = scanner.nextLine();
 
+        System.out.println(" ");
+        System.out.println("        CONFIGURAZIONE DI RCON:");
+        System.out.println("RCON E' NECESSARIO PER POTER ESEGUIRE COMANDI TRAMITE");
+        System.out.println("LA CONSOLE DEL PROGRAMMA DOPO L'INSTALLAZIONE DEL SERVER");
+        System.out.println(" ");
+
+        System.out.println("Scegli una porta per Rcon (es: 25575):");
+        rconPort = scanner.nextLine();
+
+        System.out.println("Scegli una Password per Rcon:");
+        rconPassword = scanner.nextLine();
+
         // SETUP
         // Aggiorna il file di configurazione
         config.setConfig("software", software);
@@ -129,7 +143,10 @@ public class ItalianConsole {
             String configDifficulty = "difficulty=" + difficulty + "\n";
             String configNetherEnabled = "allow-nether=" + netherEnabled + "\n";
             String configWorldType = "level-type=minecraft\\:" + worldType + "\n";
-            String disableSecureProfile = "enforce-secure-profile=false";
+            String disableSecureProfile = "enforce-secure-profile=false\n";
+            String enableRcon = "enable-rcon=true\n";
+            String rconPortConfig = "rcon.port=" + rconPort +"\n";
+            String rconPasswordConfig = "rcon.password=" + rconPassword + "\n";
 
             FileWriter serverConfig = new FileWriter("server.properties");
             serverConfig.write(configDistance);
@@ -144,6 +161,12 @@ public class ItalianConsole {
             System.out.println("---CHAT REPORT SYSTEM---");
             System.out.println("Disabilitando il profilo sicuro...");
             serverConfig.write(disableSecureProfile);
+
+            System.out.println("ABILITANDO RCON...");
+            Thread.sleep(3000);
+            serverConfig.write(enableRcon);
+            serverConfig.write(rconPortConfig);
+            serverConfig.write(rconPasswordConfig);
             serverConfig.close();
             config.setConfig("configured", "1");
         } catch (IOException e) {
